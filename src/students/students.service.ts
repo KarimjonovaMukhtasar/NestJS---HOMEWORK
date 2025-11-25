@@ -1,12 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-// import { CreateStudentDto } from './dto/create-student.dto';
-// import { UpdateStudentDto } from './dto/update-student.dto';
 import fs from 'fs/promises';
 import path from 'path';
 import { v4 as uuid } from 'uuid';
 
 @Injectable()
-// CREATE A STUDENT!
+
 export class StudentsService {
   private filePath = path.join(process.cwd(), 'src/students/students.json');
   async create(payload: {
@@ -37,7 +35,7 @@ export class StudentsService {
     }
   }
 
-  // FIND ALL STUDENTS
+
   async findAll() {
     try {
       const fileData = await fs.readFile(this.filePath, 'utf-8');
