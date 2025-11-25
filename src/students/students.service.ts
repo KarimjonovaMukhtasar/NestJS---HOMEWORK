@@ -4,11 +4,9 @@ import { Injectable } from '@nestjs/common';
 import fs from "fs/promises"
 import path from "path"
 import {v4 as uuid} from "uuid"
-import { fileURLToPath } from 'url';
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 @Injectable()
+// CREATE A STUDENT!
 export class StudentsService {
   private filePath = path.join(process.cwd(), 'src/students/students.json');
   async create(payload: {username: string, email: string, password: string, age: number}) {
@@ -27,9 +25,22 @@ export class StudentsService {
       throw new Error(`ERROR WHILE WRITING TO A FILE!  ${(err as Error).message}`)
     }
   }
-
-  async findAll() { 
-  }
+ 
+  // FIND ALL STUDENTS
+    async findAll(){
+      try {
+       const fileData = await fs.readFile(this.filePath, 'utf-8')
+       const students = fileData ? JSON.parse(fileData) : []
+       return {
+        success: true, 
+        message: `SUCCESSFULLY RETRIEVED ALL DATA`,
+        data: students
+       }
+      } catch (err) {
+        throw new Error(`ERROR WHILE READING A FILE!  ${(err as Error).message}`)
+      }
+    }
+  
 
   async findOne(id: string) {
     return {
