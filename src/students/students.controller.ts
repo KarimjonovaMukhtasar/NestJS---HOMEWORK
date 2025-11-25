@@ -1,34 +1,34 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { StudentsService } from './students.service';
-import { CreateStudentDto } from './dto/create-student.dto';
-import { UpdateStudentDto } from './dto/update-student.dto';
+import {  Controller,   Get,   Post,  Body,  Patch, Param, Delete } from '@nestjs/common';
+import { StudentsService } from './students.service.js';
+// import { CreateStudentDto } from './dto/create-student.dto';
+// import { UpdateStudentDto } from './dto/update-student.dto';
 
 @Controller('students')
 export class StudentsController {
   constructor(private readonly studentsService: StudentsService) {}
 
   @Post()
-  create(@Body() createStudentDto: CreateStudentDto) {
-    return this.studentsService.create(createStudentDto);
+  create(@Body() payload: {username: string, email: string, password: string, age: number}) {
+    return this.studentsService.create(payload);
   }
 
-  @Get()
+  @Get('all')
   findAll() {
     return this.studentsService.findAll();
   }
 
-  @Get(':id')
+  @Get('one/:id')
   findOne(@Param('id') id: string) {
-    return this.studentsService.findOne(+id);
+    return this.studentsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateStudentDto: UpdateStudentDto) {
-    return this.studentsService.update(+id, updateStudentDto);
-  }
+  // @Patch()
+  // update(@Body() data: {id: string, email?: string, username?:string, password?:string, age?:number}) {
+  //   return this.studentsService.update();
+  // }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.studentsService.remove(+id);
+    return this.studentsService.remove(id);
   }
 }
