@@ -58,15 +58,15 @@ export class StudentsService {
       const students = JSON.parse(fileData);
       const studentIndex = students.findIndex((el) => el.id === id);
       if (studentIndex === -1) {
-         return {
-      success: false,
-      message: 'Student not found',
-    };
+        return {
+          success: false,
+          message: 'Student not found',
+        };
       }
-      return { 
+      return {
         success: true,
         message: `SUCCESSFULLY RETRIEVED ONE STUDENT FROM DATABASE`,
-        data: students[studentIndex]
+        data: students[studentIndex],
       };
     } catch (err) {
       throw new Error(
@@ -75,11 +75,60 @@ export class StudentsService {
     }
   }
 
-  async update(id: string) {
-    return `This action updates a #${id} student`;
+  async update(data: {id: string, email?: string, username?:string, password?:string, age?:number}) {
+    try {
+      const fileData = await fs.readFile(this.filePath, 'utf-8');
+      const students = JSON.parse(fileData);
+      const studentIndex = students.findIndex((el) => el.id === data.id);
+      if (studentIndex === -1) {
+        return {
+          success: false,
+          message: 'Student not found',
+        };
+      }
+     students[studentIndex]  = {...students[studentIndex], ...data}
+      await fs.writeFile(
+        this.filePath,
+        JSON.stringify(students, null, 2),
+        'utf-8',
+      );
+      return {
+        success: true,
+        message: `SUCCESSFULLY UPDATED ONE STUDENT`,
+        data: students[studentIndex],
+      };
+    } catch (err) {
+      throw new Error(
+        `ERROR WHILE UPDATING A STUDENT ${(err as Error).message}`,
+      );
+    }
   }
 
   async remove(id: string) {
-    return `This action removes a #${id} student`;
+    try {
+      const fileData = await fs.readFile(this.filePath, 'utf-8');
+      const students = JSON.parse(fileData);
+      const studentIndex = students.findIndex((el) => el.id === id);
+      if (studentIndex === -1) {
+        return {
+          success: false,
+          message: 'Student not found',
+        };
+      }
+      students.splice(studentIndex, 1)
+      await fs.writeFile(
+        this.filePath,
+        JSON.stringify(students, null, 2),
+        'utf-8',
+      );
+      return {
+        success: true,
+        message: `SUCCESSFULLY DELETED ONE STUDENT FROM DATABASE`
+      };
+    } catch (err) {
+      throw new Error(
+        `ERROR WHILE FINDING A STUDENT! ${(err as Error).message}`,
+      );
+    }
   }
 }

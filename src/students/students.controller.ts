@@ -22,10 +22,10 @@ export class StudentsController {
     return this.studentsService.findOne(id);
   }
 
-  // @Patch()
-  // update(@Body() data: {id: string, email?: string, username?:string, password?:string, age?:number}) {
-  //   return this.studentsService.update();
-  // }
+  @Patch()
+  update(@Body() data: {id: string, email?: string, username?:string, password?:string, age?:number}) {
+    return this.studentsService.update(data);
+  }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
